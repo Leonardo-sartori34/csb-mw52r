@@ -1,0 +1,455 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <title>Static Template</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/0.5.0-beta4/html2canvas.min.js"></script>
+    <link href="style.css" rel="stylesheet" type="text/css" />
+    <script
+      src="https://cdnjs.cloudflare.com/ajax/libs/Base64/1.1.0/base64.min.js"
+      integrity="sha512-gysqkfMGKYvQSEPi68aIzL4ffmrQ0I6azOoPJ+ocle8k1bblsHJh7QVVoy4HHQG2iPzvFmRbs81d8kkVSyCkjA=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    ></script>
+    <script src="https://cdn.jsdelivr.net/npm/canvas2image@1.0.5/canvas2image.min.js"></script>
+  </head>
+  <body>
+    <div id="mySidenav" class="sidenav">
+      <a href="javascript:void(0)" class="closebtn" onclick="closeNav()"
+        >&times;</a
+      >
+      <input
+        type="text"
+        id="album-input"
+        onkeyup="filter()"
+        placeholder="Cerca album"
+        title="Type in a name"
+      />
+      <ul id="myUL"></ul>
+    </div>
+    <div id="main">
+      <span style="font-size: 30px; cursor: pointer;" onclick="openNav()"
+        >&#9776;</span
+      >
+      <button onclick="getDiv()" class="pulse generate">Genera</button>
+      <div id="autograph" class="center">
+        <img name="image" alt="Scegli album" border="0" width="80%" />
+        <img name="image1" width="50%" />
+        <label name="title"></label><br />
+        <p name="artists"></p>
+      </div>
+      <div id="foot"></div>
+    </div>
+    <pre id="content" style="white-space: pre-wrap;"></pre>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.19.2/axios.min.js"></script>
+    <script type="text/javascript">
+      var results;
+      // Client ID and API key from the Developer Console
+      var CLIENT_ID =
+        "552223029733-v0rprq858pfquq7jb75u3n4ip8vdvjpt.apps.googleusercontent.com";
+      var API_KEY = "AIzaSyDb6RC4mVnAaeLG5Uupa7MYATD0JQTQoAA";
+
+      // Array of API discovery doc URLs for APIs used by the quickstart
+      var DISCOVERY_DOCS = [
+        "https://sheets.googleapis.com/$discovery/rest?version=v4"
+      ];
+
+      // Authorization scopes required by the API; multiple scopes can be
+      // included, separated by spaces.
+      var SCOPES = "https://www.googleapis.com/auth/spreadsheets.readonly";
+
+      /**
+       *  On load, called to load the auth2 library and API client library.
+       */
+      function handleClientLoad() {
+        gapi.load("client", initClient);
+      }
+
+      /**
+       *  Initializes the API client library and sets up sign-in state
+       *  listeners.
+       */
+      function initClient() {
+        gapi.client
+          .init({
+            apiKey: API_KEY,
+            clientId: CLIENT_ID,
+            discoveryDocs: DISCOVERY_DOCS,
+            scope: SCOPES
+          })
+          .then(
+            function () {
+              listMajors();
+            },
+            function (error) {
+              var err = JSON.parse(JSON.stringify(error, null, 2).toString());
+              if (
+                err.details == "Cookies are not enabled in current environment."
+              ) {
+                alert("Abilitare i cookies di terze parti");
+              }
+              //appendPre(document.cookie);
+            }
+          );
+      }
+
+      /**
+       * Append a pre element to the body containing the given message
+       * as its text node. Used to display the results of the API call.
+       *
+       * @param {string} message Text to be placed in pre element.
+       */
+      function appendPre(message) {
+        var pre = document.getElementById("content");
+        var textContent = document.createTextNode(message + "\n");
+        pre.appendChild(textContent);
+      }
+
+      /**
+       * Print the names and majors of students in a sample spreadsheet:
+       * https://docs.google.com/spreadsheets/d/1BxiMVs0XRA5nFMdKvBdBZjgmUUqptlbs74OgvE2upms/edit
+       */
+      function listMajors() {
+        gapi.client.sheets.spreadsheets.values
+          .get({
+            spreadsheetId: "1ySzgWuPBCYQ8QfVRwDxapdAY2oAzzBm3EVIpYD2prjQ",
+            range: "Foglio1!A2:Z"
+          })
+          .then(
+            function (response) {
+              var range = response.result;
+              results = range.values;
+              //console.log(results[0]);
+              createList();
+              if (range.values.length < 0) {
+                appendPre("No data found.");
+              }
+            },
+            function (response) {
+              //appendPre("Error: " + response.result.error.message);
+            }
+          );
+      }
+    </script>
+
+    <script
+      async
+      defer
+      src="https://apis.google.com/js/api.js"
+      onload="this.onload=function(){};handleClientLoad()"
+      onreadystatechange="if (this.readyState === 'complete') this.onload()"
+    ></script>
+    <script>
+      const TRANSPARENT = "transparent";
+      const PURPLE = "#503750";
+      const LIGHT_BLU = "#a0c3d2";
+      const LIGHT_PURPLE = "#b49bc8";
+      const BROWN = "#7d4b32";
+      const PINK_SKIN = "#c39687";
+      const BLUE = "#1e3264";
+      const GREEN = "#27856a";
+      const ORANGE = "#c87d55";
+
+      var data = {
+        image: "https://i.ibb.co/tYnXN3n/Rosa-Minimalista-Copertina-CD.png",
+        title: "Notturno",
+        album_src: "https://open.spotify.com/album/2y8fTlIzo0Xaa8WiKau1W6",
+        artists: [
+          {
+            name: "Leonardo Sartori",
+            artists_src:
+              "https://open.spotify.com/artist/4NVhhX3tA4m84EqNNSOJV2"
+          }
+        ]
+      };
+      //templateAlbum(data, "autograph");
+
+      function templateAlbum(data, divId) {
+        console.log(data);
+        var div = document.getElementById(divId).children;
+        for (const i of div) {
+          console.log(i);
+          if (i.getAttribute("name") === "image") {
+            i.setAttribute("src", data.image);
+          } else if (i.getAttribute("name") === "image1") {
+            i.setAttribute(
+              "src",
+              "https://i.ibb.co/BLwcZmC/Firma-removebg-preview-1.png"
+            );
+          } else if (i.getAttribute("name") === "title") {
+            i.innerHTML = data.title;
+            i.addEventListener("click", function () {
+              window.open(data.album_src);
+            });
+          } else if (i.getAttribute("name") === "artists") {
+            for (const j of data.artists) {
+              var l = document.createElement("span");
+              l.appendChild(document.createTextNode(j.name + " "));
+              //i.innerHTML += j.name + " ";
+              l.addEventListener("click", function () {
+                window.open(j.artists_src);
+              });
+              i.appendChild(l);
+            }
+          }
+        }
+        var album_id = getAlbumId(data.album_src);
+        createListenButton(album_id);
+        //download(getSpotifyCode(album_id, "album"));
+        createSpotifyCodeDiv(album_id, data.title);
+      }
+      var bg_colors = [
+        TRANSPARENT,
+        LIGHT_BLU,
+        PURPLE,
+        LIGHT_PURPLE,
+        BROWN,
+        PINK_SKIN,
+        BLUE,
+        GREEN,
+        ORANGE
+      ];
+
+      createFooter(bg_colors);
+
+      function createFooter(ar) {
+        var div = document.createElement("div");
+        div.setAttribute("class", "frame");
+        console.log(div.getAttribute("class"));
+
+        for (const i of ar) {
+          var btn = document.createElement("button");
+          btn.setAttribute("class", "btn");
+          btn.style.background = i;
+          btn.style.border = "1px solid white";
+          btn.addEventListener("click", function () {
+            document.getElementsByClassName(
+              "center"
+            )[0].style.background = this.style.background;
+            //getDiv();
+          });
+          div.appendChild(btn);
+        }
+
+        document.getElementById("foot").appendChild(div);
+      }
+      downloadURI = function (uri, name) {
+        var link = document.createElement("a");
+        link.download = name;
+        link.href = uri;
+        link.click();
+      };
+      function getDiv() {
+        var w = 1000;
+        var h = 1000;
+        var canvas = document.createElement("canvas");
+        canvas.width = w * 2;
+        canvas.height = h * 2;
+        canvas.style.width = w + "px";
+        canvas.style.height = h + "px";
+        var context = canvas.getContext("2d");
+        context.scale(2, 2);
+        html2canvas(document.querySelector("#autograph"), {
+          canvas: canvas,
+          logging: true,
+          //allowTaint: true,
+          width: 300,
+          useCORS: true,
+          foreignObjectRendering: true
+        }).then((canvas) => {
+          // Convert the canvas to data
+          var myImage = canvas.toDataURL("image/png");
+          downloadURI("data:" + myImage, "Album.png");
+        });
+      }
+
+      function openNav() {
+        document.getElementById("mySidenav").style.width = "250px";
+        document.getElementById("main").style.marginLeft = "250px";
+      }
+
+      function closeNav() {
+        document.getElementById("mySidenav").style.width = "0";
+        document.getElementById("main").style.marginLeft = "0";
+      }
+
+      function filter() {
+        var input, filter, ul, li, a, i, txtValue;
+        input = document.getElementById("album-input");
+        filter = input.value.toUpperCase();
+        ul = document.getElementById("myUL");
+        li = ul.getElementsByTagName("li");
+        for (i = 0; i < li.length; i++) {
+          a = li[i].getElementsByTagName("a")[0];
+          txtValue = a.textContent || a.innerText;
+          if (txtValue.toUpperCase().indexOf(filter) > -1) {
+            li[i].style.display = "";
+          } else {
+            li[i].style.display = "none";
+          }
+        }
+      }
+
+      function getArtists(x) {
+        var Artists = [];
+        var artists = x[3].split(", ");
+        var srcs = x[4].split(" ");
+        console.log(artists);
+        console.log(srcs);
+        for (var i = 0; i < artists.length; ++i) {
+          var artist_obj = { name: artists[i], artists_src: srcs[i] };
+          Artists.push(artist_obj);
+        }
+        return Artists;
+      }
+
+      function createData(x) {
+        var data = {
+          image: x[1],
+          title: x[0],
+          album_src: x[2],
+          artists: getArtists(x)
+        };
+        /*image: "https://i.ibb.co/tYnXN3n/Rosa-Minimalista-Copertina-CD.png",
+        title: "Notturno",
+        album_src: "https://open.spotify.com/album/2y8fTlIzo0Xaa8WiKau1W6",
+        artists: [
+          {
+            name: "Leonardo Sartori",
+            artists_src:
+              "https://open.spotify.com/artist/4NVhhX3tA4m84EqNNSOJV2"
+          }*/
+        return data;
+      }
+
+      function createList() {
+        var list = document.getElementById("myUL");
+        for (const x of results) {
+          var n = x[0];
+          var li = document.createElement("li");
+          var a = document.createElement("a");
+          a.textContent = n;
+          a.href = "javascript: void(0);";
+          /*span.addEventListener("click", function () {
+            templateAlbum(createData(x), "autograph");
+          });*/
+          li.appendChild(a);
+          list.appendChild(li);
+        }
+        var list = document.getElementById("myUL");
+
+        list.addEventListener("click", function (event) {
+          if (event.target && event.target.nodeName == "A") {
+            event.preventDefault();
+            var index = Array.prototype.indexOf.call(
+              list.children,
+              event.target.parentNode
+            );
+            var href = results[index];
+            console.log(href);
+            var myDivs = document.getElementsByName("artists");
+            var myDiv = myDivs[0];
+            myDiv.innerHTML = "";
+            templateAlbum(createData(href), "autograph");
+          }
+        });
+      }
+
+      function getAlbumId(url) {
+        var parts = url.split("https://open.spotify.com/album/");
+        console.log(parts[1]);
+        return parts[1];
+      }
+
+      window.onload = function () {
+        createFollowButton();
+      };
+      function createFollowButton() {
+        var div = document.getElementById("mySidenav");
+        var foot = document.createElement("div");
+        foot.setAttribute("class", "follow");
+        var iframe = document.createElement("iframe");
+        iframe.setAttribute(
+          "src",
+          "https://open.spotify.com/follow/1/?uri=spotify:artist:4NVhhX3tA4m84EqNNSOJV2&size=detail&theme=dark&show-count=0"
+        );
+        iframe.setAttribute("width", "200");
+        iframe.setAttribute("height", "56");
+        iframe.setAttribute("scrolling", "no");
+        iframe.setAttribute("frameborder", "0");
+        iframe.setAttribute("style", "border: none; overflow: hidden;");
+        iframe.setAttribute("allowtransparency", "true");
+        foot.appendChild(iframe);
+        div.appendChild(foot);
+      }
+
+      function createListenButton(id) {
+        var div = document.getElementById("main");
+        var foot = document.createElement("div");
+        foot.setAttribute("class", "listen");
+        var iframe = document.createElement("iframe");
+        iframe.setAttribute(
+          "src",
+          "https://open.spotify.com/embed/album/" + id
+        );
+        iframe.setAttribute("width", "250");
+        iframe.setAttribute("height", "80");
+        iframe.setAttribute("frameborder", "0");
+        iframe.setAttribute("allowtransparency", "true");
+        iframe.setAttribute("allow", "encrypted-media");
+        foot.appendChild(iframe);
+        div.appendChild(foot);
+      }
+
+      function getSpotifyCode(uri, type, ext) {
+        var code = "https://scannables.scdn.co/uri/plain/";
+        code += ext + "/24E07D/white/640/spotify:" + type + ":" + uri;
+        return code;
+      }
+
+      function download(src, name, ext) {
+        axios({
+          url: src,
+          method: "GET",
+          responseType: "blob"
+        }).then((response) => {
+          const url = window.URL.createObjectURL(new Blob([response.data]));
+          const link = document.createElement("a");
+          link.href = url;
+          console.log(src);
+          link.setAttribute("download", name + "." + ext);
+          document.body.appendChild(link);
+          link.click();
+          document.body.removeChild(link);
+        });
+      }
+
+      function createSpotifyCodeDiv(uri, name) {
+        var main = document.getElementById("main");
+        var div = document.createElement("div");
+        var title = document.createElement("h5");
+        title.textContent = "Genera Spotify Code";
+        title.style.color = "white";
+        div.appendChild(title);
+        var exts = ["jpeg", "png", "svg"];
+        var udiv = document.createElement("div");
+        exts.forEach((x) => {
+          var btn = document.createElement("button");
+          btn.textContent = x.toUpperCase();
+          btn.setAttribute("class", "generate");
+          btn.style.fontSize = "10px";
+          var url = getSpotifyCode(uri, "album", x);
+          btn.addEventListener("click", function () {
+            download(url, name, x);
+          });
+          console.log(x);
+          udiv.appendChild(btn);
+        });
+        div.appendChild(udiv);
+        main.appendChild(div);
+      }
+    </script>
+  </body>
+</html>
