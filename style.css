@@ -90,7 +90,7 @@ span:hover {
   width: 100%;
   margin: 20px auto;
   text-align: center;
-  background: black;
+  background: transparent;
 }
 
 .follow {
