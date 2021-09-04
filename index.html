@@ -33,7 +33,6 @@
       <span style="font-size: 30px; cursor: pointer;" onclick="openNav()"
         >&#9776;</span
       >
-      <button onclick="getDiv()" class="pulse generate">Genera</button>
       <div id="autograph" class="center">
         <img name="image" alt="Scegli album" border="0" width="80%" />
         <img name="image1" width="50%" />
@@ -232,7 +231,13 @@
           });
           div.appendChild(btn);
         }
-
+        var btn = document.createElement("button");
+        btn.setAttribute("class", "pulse generate");
+        btn.textContent = "Genera";
+        btn.addEventListener("click", function () {
+          getDiv();
+        });
+        div.appendChild(btn);
         document.getElementById("foot").appendChild(div);
       }
       downloadURI = function (uri, name) {
